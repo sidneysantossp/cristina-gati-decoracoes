@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: config
+    // Document: site
+    // Fields: navbar (map), hero (map), footer (map)
+    //
+    // Collection: services
+    // Fields: id (string), title (string), desc (string), image (string), order (number)
+    //
+    // Collection: portfolio
+    // Fields: url (string), category (string), order (number)
+    //
+    // Collection: testimonials
+    // Fields: quote (string), author (string), type (string), order (number)
+    //
+    // Collection: users
+    // Fields: email (string), role (string)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "sid.websp@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // Public read access for landing page content
+    match /config/site {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /portfolio/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "SiteConfig": {
+      "title": "Configuração do Site",
+      "description": "Configurações globais, menu e rodapé",
+      "type": "object",
+      "properties": {
+        "navbar": {
+          "type": "object",
+          "properties": {
+            "logo": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "href": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "hero": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "image": { "type": "string" }
+          }
+        },
+        "footer": {
+          "type": "object",
+          "properties": {
+            "about": { "type": "string" },
+            "whatsapp": { "type": "string" },
+            "email": { "type": "string" },
+            "address": { "type": "string" },
+            "hours": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Service": {
+      "title": "Serviço",
+      "description": "Definição de um serviço oferecido",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "desc": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "PortfolioItem": {
+      "title": "Item de Portfólio",
+      "description": "Uma imagem ou projeto no portfólio",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "category": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "Testimonial": {
+      "title": "Depoimento",
+      "description": "Feedback de clientes",
+      "type": "object",
+      "properties": {
+        "quote": { "type": "string" },
+        "author": { "type": "string" },
+        "type": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "config/site": {
+      "schema": "SiteConfig",
+      "description": "Configurações globais do site"
+    },
+    "services": {
+      "schema": "Service",
+      "description": "Lista de serviços"
+    },
+    "portfolio": {
+      "schema": "PortfolioItem",
+      "description": "Galeria do portfólio"
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Depoimentos de clientes"
+    }
+  }
+}
