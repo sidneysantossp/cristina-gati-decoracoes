@@ -74,6 +74,16 @@
         "type": { "type": "string" },
         "order": { "type": "number" }
       }
+    },
+    "AppUser": {
+      "title": "Usuário",
+      "description": "Usuário com acesso ao painel",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "editor"] },
+        "name": { "type": "string" }
+      }
     }
   },
   "firestore": {
@@ -92,6 +102,10 @@
     "testimonials": {
       "schema": "Testimonial",
       "description": "Depoimentos de clientes"
+    },
+    "users": {
+      "schema": "AppUser",
+      "description": "Usuários autorizados"
     }
   }
 }
