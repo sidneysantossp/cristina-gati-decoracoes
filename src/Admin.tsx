@@ -774,7 +774,7 @@ const PortfolioEditor = () => {
             <div className="flex-1 space-y-4">
               {editingId === item.docId ? (
                 <>
-                  <Input label="URL da Imagem" value={item.url} onChange={(v) => handleUpdate(item.docId!, { url: v })} />
+                  <ImageUpload label="Imagem do Portfólio" value={item.url} onChange={(v) => handleUpdate(item.docId!, { url: v })} />
                   <Input label="Categoria" value={item.category} onChange={(v) => handleUpdate(item.docId!, { category: v })} />
                   <button 
                     onClick={() => setEditingId(null)}
