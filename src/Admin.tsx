@@ -129,6 +129,7 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState<'config' | 'hero' | 'services' | 'portfolio' | 'testimonials' | 'users'>('config');
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -145,6 +146,22 @@ const AdminPanel = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleLogin = async () => {
+    setAuthError(null);
+    try {
+      await loginWithGoogle();
+    } catch (err: any) {
+      console.error("Login error:", err);
+      if (err.code === 'auth/unauthorized-domain') {
+        setAuthError(`Este domínio (${window.location.hostname}) não está autorizado no console do Firebase. Vá em Authentication > Settings > Authorized Domains e adicione este domínio.`);
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setAuthError("O pop-up foi fechado antes de completar o login.");
+      } else {
+        setAuthError("Falha ao entrar: " + (err.message || "Erro desconhecido"));
+      }
+    }
+  };
+
   if (loading) return <div className="h-screen flex items-center justify-center font-serif">Carregando...</div>;
 
   if (!user) {
@@ -153,8 +170,16 @@ const AdminPanel = () => {
         <div className="max-w-md w-full bg-white p-12 border border-black/5 text-center flex flex-col gap-8">
           <h1 className="text-4xl font-serif text-brand-dark">Acesso Restrito</h1>
           <p className="text-brand-muted text-sm">Faça login com sua conta Google autorizada para gerenciar o conteúdo.</p>
+          
+          {authError && (
+            <div className="p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] uppercase tracking-wider font-bold text-left">
+              {authError}
+            </div>
+          )}
+
           <button 
-            onClick={loginWithGoogle}
+            type="button"
+            onClick={handleLogin}
             className="bg-brand-dark text-white py-4 px-8 uppercase tracking-widest text-[10px] font-bold hover:bg-black transition-all"
           >
             Entrar com Google
