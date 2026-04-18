@@ -1013,6 +1013,8 @@ const LandingPage = () => {
         };
         setConfig(initialConfig);
       }
+    }, (error) => {
+      console.error("Error fetching config:", error);
     });
 
     // Fetch Services
@@ -1031,6 +1033,8 @@ const LandingPage = () => {
       } else {
         setServices(snapshot.docs.map(d => d.data() as Service));
       }
+    }, (error) => {
+      console.error("Error fetching services:", error);
     });
 
     // Fetch Portfolio
@@ -1051,6 +1055,8 @@ const LandingPage = () => {
       } else {
         setPortfolio(snapshot.docs.map(d => d.data() as PortfolioItem));
       }
+    }, (error) => {
+      console.error("Error fetching portfolio:", error);
     });
 
     // Fetch Testimonials
@@ -1066,6 +1072,9 @@ const LandingPage = () => {
       } else {
         setTestimonials(snapshot.docs.map(d => d.data() as Testimonial));
       }
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching testimonials:", error);
       setLoading(false);
     });
 

@@ -34,7 +34,25 @@ import {
 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiClient: any = null;
+
+const getAIClient = () => {
+  if (!aiClient) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey || apiKey === 'undefined') {
+      console.warn("GEMINI_API_KEY is not defined. AI features will not work.");
+      return null;
+    }
+    try {
+      aiClient = new GoogleGenAI({ apiKey });
+    } catch (e) {
+      console.error("Failed to initialize GoogleGenAI:", e);
+      return null;
+    }
+  }
+  return aiClient;
+};
+
 import { cn } from './lib/utils';
 
 // --- Types ---
@@ -546,6 +564,11 @@ const ServicesEditor = () => {
       // Basic validation
       if (!service.title || service.title === 'Novo Serviço') {
         throw new Error("Por favor, defina um título real para o serviço antes de gerar a imagem.");
+      }
+
+      const ai = getAIClient();
+      if (!ai) {
+        throw new Error("AI Client não inicializado. Verifique a chave de API.");
       }
 
       const prompt = `A high-quality, professional, minimalist and elegant image representing the service: "${service.title}". Description: "${service.desc}". Style: minimalist, sophisticated, luxury event decoration, soft lighting, high-end photography.`;
