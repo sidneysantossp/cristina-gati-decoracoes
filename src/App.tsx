@@ -16,7 +16,9 @@ import {
   MapPin,
   Clock,
   Share2,
-  MessageCircle
+  MessageCircle,
+  Check,
+  AlertCircle
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { db } from './lib/firebase';
@@ -115,15 +117,13 @@ const SectionHeading = ({
   className,
   align = 'center'
 }: { title: string; subtitle?: string; className?: string; align?: 'left' | 'center' }) => (
-  <div className={cn('mb-20', align === 'center' ? 'text-center' : 'text-left', className)}>
+  <div className={cn('mb-12 md:mb-20', align === 'center' ? 'text-center' : 'text-left', className)}>
     {subtitle && (
-      <span className="block text-[10px] uppercase tracking-[0.4em] text-brand-muted mb-6 font-medium">
+      <span className="block text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-brand-muted mb-4 md:mb-6 font-medium">
         {subtitle}
       </span>
     )}
-    <h2 className="text-5xl md:text-7xl font-serif text-brand-dark leading-tight">
-      {title}
-    </h2>
+    <h2 className="text-4xl md:text-7xl font-serif text-brand-dark leading-tight" dangerouslySetInnerHTML={{ __html: title }} />
   </div>
 );
 
@@ -207,7 +207,7 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
 };
 
 const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
-  <section className="relative h-screen flex items-center justify-center overflow-hidden px-10 text-center">
+  <section className="relative min-h-[90vh] md:h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-20 md:py-0">
     <div className="absolute inset-0 z-0">
       <img 
         src={config.image} 
@@ -217,12 +217,12 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
       />
     </div>
 
-    <div className="relative z-10 max-w-4xl">
+    <div className="relative z-10 max-w-4xl pt-10 md:pt-0">
       <motion.span 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="block text-[10px] uppercase tracking-[0.6em] text-brand-muted mb-10 font-medium"
+        className="block text-[8px] md:text-[10px] uppercase tracking-[0.4em] md:tracking-[0.6em] text-brand-muted mb-6 md:mb-10 font-medium"
       >
         {config.subtitle}
       </motion.span>
@@ -230,7 +230,7 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-6xl md:text-8xl lg:text-9xl font-serif text-brand-dark mb-16 leading-[1.1]"
+        className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.1] px-4 md:px-0"
         dangerouslySetInnerHTML={{ __html: config.title }}
       />
       
@@ -238,14 +238,14 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="flex flex-row items-center justify-center gap-12"
+        className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12"
       >
-        <Button variant="link">VER PORTFÓLIO</Button>
-        <Button variant="link">WHATSAPP</Button>
+        <Button variant="link" className="w-full sm:w-auto">VER PORTFÓLIO</Button>
+        <Button variant="link" className="w-full sm:w-auto">WHATSAPP</Button>
       </motion.div>
     </div>
 
-    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-brand-dark/20"></div>
+    <div className="hidden md:block absolute bottom-10 left-1/2 -translate-x-1/2 w-[1px] h-20 bg-brand-dark/20"></div>
   </section>
 );
 
@@ -258,9 +258,9 @@ const Stats = () => {
   ];
 
   return (
-    <section className="py-32 border-y border-black/5 bg-white">
-      <div className="max-w-7xl mx-auto px-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-16">
+    <section className="py-20 md:py-32 border-y border-black/5 bg-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16">
           {stats.map((stat, idx) => (
             <motion.div 
               key={idx}
@@ -268,10 +268,10 @@ const Stats = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-2 md:gap-4"
             >
-              <span className="text-5xl md:text-6xl font-serif text-brand-dark tracking-tight">{stat.value}</span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-brand-muted font-medium">{stat.label}</span>
+              <span className="text-4xl md:text-6xl font-serif text-brand-dark tracking-tight">{stat.value}</span>
+              <span className="text-[8px] md:text-[10px] uppercase tracking-[0.2em] text-brand-muted font-medium">{stat.label}</span>
             </motion.div>
           ))}
         </div>
@@ -281,15 +281,15 @@ const Stats = () => {
 };
 
 const About = ({ config }: { config: SiteConfig['about'] }) => (
-  <section id="sobre" className="py-40 bg-white relative overflow-hidden">
-    <div className="max-w-7xl mx-auto px-10">
-      <div className="grid lg:grid-cols-2 gap-24 items-center">
+  <section id="sobre" className="py-20 md:py-40 bg-white relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative aspect-square overflow-hidden border-4 border-brand-dark"
+          className="relative aspect-square overflow-hidden border-2 md:border-4 border-brand-dark order-2 lg:order-1"
         >
           <img 
             src={config.image} 
@@ -303,20 +303,20 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col gap-10"
+          className="flex flex-col gap-6 md:gap-10 order-1 lg:order-2"
         >
-          <span className="text-[10px] uppercase tracking-[0.4em] text-brand-muted font-medium">{config.subtitle}</span>
+          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-brand-muted font-medium">{config.subtitle}</span>
           <h2 
-            className="text-5xl md:text-7xl font-serif text-brand-dark leading-tight"
+            className="text-4xl md:text-7xl font-serif text-brand-dark leading-tight"
             dangerouslySetInnerHTML={{ __html: config.title }}
           />
           <div 
-            className="space-y-8 text-brand-muted text-lg leading-relaxed font-light"
+            className="space-y-6 md:space-y-8 text-brand-muted text-base md:text-lg leading-relaxed font-light"
             dangerouslySetInnerHTML={{ __html: config.content }}
           />
-          <a href="#" className="inline-flex items-center gap-6 text-[10px] uppercase tracking-[0.3em] font-bold text-brand-dark group">
+          <a href="#" className="inline-flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-brand-dark group">
             Conheça nossa curadoria
-            <ArrowRight size={18} className="group-hover:translate-x-4 transition-transform text-brand-dark" />
+            <ArrowRight size={16} className="group-hover:translate-x-4 transition-transform text-brand-dark md:w-[18px]" />
           </a>
         </motion.div>
       </div>
@@ -326,8 +326,8 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
 
 const Services = ({ services }: { services: Service[] }) => {
   return (
-    <section id="servicos" className="py-40 bg-brand-light">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="servicos" className="py-20 md:py-40 bg-brand-light">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -341,7 +341,7 @@ const Services = ({ services }: { services: Service[] }) => {
             className="max-w-4xl"
           />
         </motion.div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
           {services.map((service, idx) => (
             <motion.div 
               key={service.id}
@@ -364,13 +364,13 @@ const Services = ({ services }: { services: Service[] }) => {
               </div>
 
               {/* Content */}
-              <div className="relative z-10 h-full p-12 flex flex-col gap-8">
-                <span className="text-3xl font-serif italic text-brand-dark/10 group-hover:text-brand-dark/20 transition-colors">{service.id}</span>
-                <h3 className="text-3xl font-serif text-brand-dark leading-tight">{service.title}</h3>
-                <p className="text-sm text-brand-muted leading-relaxed font-light">
+              <div className="relative z-10 h-full p-8 md:p-12 flex flex-col gap-4 md:gap-8">
+                <span className="text-2xl md:text-3xl font-serif italic text-brand-dark/10 group-hover:text-brand-dark/20 transition-colors">{service.id}</span>
+                <h3 className="text-2xl md:text-3xl font-serif text-brand-dark leading-tight">{service.title}</h3>
+                <p className="text-xs md:text-sm text-brand-muted leading-relaxed font-light">
                   {service.desc}
                 </p>
-                <button className="mt-auto text-[10px] uppercase tracking-[0.2em] font-bold text-brand-dark border-b border-black/10 pb-1 w-fit transition-all hover:border-brand-dark">
+                <button className="mt-auto text-[8px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-brand-dark border-b border-black/10 pb-1 w-fit transition-all hover:border-brand-dark">
                   Saiba Mais
                 </button>
               </div>
@@ -391,11 +391,9 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
     ? items 
     : items.filter(i => i.category === activeCategory);
 
-  const shareUrl = window.location.href;
-
   return (
-    <section id="portfolio" className="py-40 bg-white">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="portfolio" className="py-20 md:py-40 bg-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -413,14 +411,14 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-10 mb-20"
+          className="flex flex-wrap justify-center gap-4 sm:gap-10 mb-12 md:mb-20"
         >
           {categories.map((cat) => (
             <button 
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                'text-[10px] uppercase tracking-[0.3em] font-bold transition-all pb-2 border-b-2',
+                'text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold transition-all pb-2 border-b-2',
                 activeCategory === cat ? 'text-brand-dark border-brand-dark' : 'text-brand-muted border-transparent hover:text-brand-dark'
               )}
             >
@@ -550,8 +548,8 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
 
 const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], items: Testimonial[] }) => {
   return (
-    <section id="depoimentos" className="py-40 bg-brand-light">
-      <div className="max-w-7xl mx-auto px-10">
+    <section id="depoimentos" className="py-20 md:py-40 bg-brand-light">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -563,7 +561,7 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
             title={config.title} 
           />
         </motion.div>
-        <div className="grid md:grid-cols-3 gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
           {items.map((t, idx) => (
             <motion.div 
               key={idx}
@@ -571,14 +569,14 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="flex flex-col gap-10 p-12 border border-black/5 bg-white"
+              className="flex flex-col gap-6 md:gap-10 p-8 md:p-12 border border-black/5 bg-white"
             >
-              <p className="text-xl font-serif italic text-brand-dark/80 leading-relaxed">
+              <p className="text-lg md:text-xl font-serif italic text-brand-dark/80 leading-relaxed">
                 "{t.quote}"
               </p>
               <div className="flex flex-col gap-1">
-                <span className="text-xs font-bold text-brand-dark uppercase tracking-widest">{t.author}</span>
-                <span className="text-[9px] uppercase tracking-[0.2em] text-brand-muted font-medium">{t.type}</span>
+                <span className="text-[10px] md:text-xs font-bold text-brand-dark uppercase tracking-widest">{t.author}</span>
+                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-brand-muted font-medium">{t.type}</span>
               </div>
             </motion.div>
           ))}
@@ -594,27 +592,57 @@ const Contact = ({ config }: { config: SiteConfig['footer'] }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const validate = () => {
-    const newErrors: { name?: string; email?: string; message?: string } = {};
-    if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
-    if (!formData.email.trim()) {
-      newErrors.email = 'E-mail é obrigatório';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'E-mail inválido';
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+  const validateField = (name: string, value: string) => {
+    let error = '';
+    if (name === 'name') {
+      if (!value.trim()) error = 'Nome é obrigatório';
+      else if (value.trim().length < 3) error = 'Nome muito curto';
     }
-    if (!formData.message.trim()) newErrors.message = 'Mensagem é obrigatória';
-    return newErrors;
+    if (name === 'email') {
+      if (!value.trim()) error = 'E-mail é obrigatório';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'E-mail inválido';
+    }
+    if (name === 'message') {
+      if (!value.trim()) error = 'Mensagem é obrigatória';
+      else if (value.trim().length < 10) error = 'Conte-nos um pouco mais seu sonho...';
+    }
+    return error;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
+  const validateAll = () => {
+    const newErrors = {
+      name: validateField('name', formData.name),
+      email: validateField('email', formData.email),
+      message: validateField('message', formData.message)
+    };
+    setErrors(newErrors);
+    setTouched({ name: true, email: true, message: true });
+    return Object.values(newErrors).every(err => !err);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    if (!validateAll()) return;
 
-    setErrors({});
     setIsSubmitting(true);
 
     // Simulate API call
@@ -628,32 +656,33 @@ const Contact = ({ config }: { config: SiteConfig['footer'] }) => {
   };
 
   return (
-    <section id="contato" className="py-40 bg-white">
-      <div className="max-w-7xl mx-auto px-10">
-        <div className="grid lg:grid-cols-2 gap-32">
+    <section id="contato" className="py-20 md:py-40 bg-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <div className="grid lg:grid-cols-2 gap-16 md:gap-32 text-center lg:text-left">
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col gap-16"
+            className="flex flex-col gap-8 md:gap-16"
           >
             <SectionHeading 
               subtitle="Conversa & Curadoria" 
               title="VAMOS CRIAR?" 
               align="left"
+              className="lg:text-left text-center"
             />
-            <p className="text-brand-dark/50 text-xl font-light leading-relaxed max-w-md">
+            <p className="text-brand-dark/50 text-lg md:text-xl font-light leading-relaxed max-w-md mx-auto lg:mx-0">
               O futuro não se espera, se constrói com código e pixels. Vamos materializar o seu sonho radical?
             </p>
-            <div className="space-y-12">
-              <div className="flex flex-col gap-4">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">WhatsApp</span>
-                <a href="#" className="text-3xl font-serif text-brand-dark hover:opacity-50 transition-all">{config.whatsapp}</a>
+            <div className="space-y-8 md:space-y-12">
+              <div className="flex flex-col gap-2 md:gap-4">
+                <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">WhatsApp</span>
+                <a href={`https://wa.me/${config.whatsapp.replace(/\D/g, '')}`} className="text-2xl md:text-3xl font-serif text-brand-dark hover:opacity-50 transition-all">{config.whatsapp}</a>
               </div>
-              <div className="flex flex-col gap-4">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">E-mail</span>
-                <a href="#" className="text-3xl font-serif text-brand-dark hover:opacity-50 transition-all">{config.email}</a>
+              <div className="flex flex-col gap-2 md:gap-4">
+                <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">E-mail</span>
+                <a href={`mailto:${config.email}`} className="text-2xl md:text-3xl font-serif text-brand-dark hover:opacity-50 transition-all break-words">{config.email}</a>
               </div>
             </div>
           </motion.div>
@@ -664,49 +693,118 @@ const Contact = ({ config }: { config: SiteConfig['footer'] }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="flex flex-col gap-10 bg-brand-light p-12 border border-black/5"
+            className="flex flex-col gap-8 md:gap-10 bg-brand-light p-8 md:p-12 border border-black/5"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
+              <div className="flex flex-col gap-4 relative">
                 <label className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Nome</label>
-                <input 
-                  type="text" 
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={cn(
-                    "bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg",
-                    errors.name ? "border-red-500" : "border-black/10"
-                  )} 
-                />
-                {errors.name && <span className="text-[10px] text-red-500 uppercase font-bold tracking-widest">{errors.name}</span>}
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={cn(
+                      "w-full bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg pr-10",
+                      touched.name && errors.name ? "border-red-500" : 
+                      touched.name && !errors.name ? "border-green-500" : "border-black/10"
+                    )} 
+                  />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                    {touched.name && (
+                      errors.name ? 
+                        <AlertCircle size={18} className="text-red-500" /> : 
+                        <Check size={18} className="text-green-500" />
+                    )}
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {touched.name && errors.name && (
+                    <motion.span 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-[10px] text-red-500 uppercase font-bold tracking-widest overflow-hidden"
+                    >
+                      {errors.name}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </div>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 relative">
                 <label className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">E-mail</label>
-                <input 
-                  type="email" 
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={cn(
-                    "bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg",
-                    errors.email ? "border-red-500" : "border-black/10"
-                  )} 
-                />
-                {errors.email && <span className="text-[10px] text-red-500 uppercase font-bold tracking-widest">{errors.email}</span>}
+                <div className="relative">
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={cn(
+                      "w-full bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg pr-10",
+                      touched.email && errors.email ? "border-red-500" : 
+                      touched.email && !errors.email ? "border-green-500" : "border-black/10"
+                    )} 
+                  />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                    {touched.email && (
+                      errors.email ? 
+                        <AlertCircle size={18} className="text-red-500" /> : 
+                        <Check size={18} className="text-green-500" />
+                    )}
+                  </div>
+                </div>
+                <AnimatePresence>
+                  {touched.email && errors.email && (
+                    <motion.span 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-[10px] text-red-500 uppercase font-bold tracking-widest overflow-hidden"
+                    >
+                      {errors.email}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 relative">
               <label className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Mensagem</label>
-              <textarea 
-                rows={4} 
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                placeholder="CONTE-NOS O SEU SONHO..."
-                className={cn(
-                  "bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg resize-none placeholder:text-black/10",
-                  errors.message ? "border-red-500" : "border-black/10"
+              <div className="relative">
+                <textarea 
+                  rows={4} 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="CONTE-NOS O SEU SONHO..."
+                  className={cn(
+                    "w-full bg-transparent border-b py-4 focus:border-brand-dark outline-none transition-all font-medium text-lg resize-none placeholder:text-black/10 pr-10",
+                    touched.message && errors.message ? "border-red-500" : 
+                    touched.message && !errors.message ? "border-green-500" : "border-black/10"
+                  )}
+                ></textarea>
+                <div className="absolute right-0 top-6">
+                  {touched.message && (
+                    errors.message ? 
+                      <AlertCircle size={18} className="text-red-500" /> : 
+                      <Check size={18} className="text-green-500" />
+                  )}
+                </div>
+              </div>
+              <AnimatePresence>
+                {touched.message && errors.message && (
+                  <motion.span 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-[10px] text-red-500 uppercase font-bold tracking-widest overflow-hidden"
+                  >
+                    {errors.message}
+                  </motion.span>
                 )}
-              ></textarea>
-              {errors.message && <span className="text-[10px] text-red-500 uppercase font-bold tracking-widest">{errors.message}</span>}
+              </AnimatePresence>
             </div>
             
             <div className="flex flex-col gap-6">
@@ -735,34 +833,35 @@ const Contact = ({ config }: { config: SiteConfig['footer'] }) => {
 };
 
 const Location = ({ config }: { config: SiteConfig['footer'] }) => (
-  <section className="py-40 bg-brand-light border-y border-black/10">
-    <div className="max-w-7xl mx-auto px-10">
-      <div className="grid lg:grid-cols-2 gap-32 items-center">
+  <section className="py-20 md:py-40 bg-brand-light border-y border-black/10">
+    <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <div className="grid lg:grid-cols-2 gap-16 md:gap-32 items-center">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col gap-16"
+          className="flex flex-col gap-10 md:gap-16 lg:text-left text-center"
         >
           <SectionHeading 
             subtitle="Onde Estamos" 
             title="PIEDADE & PILAR." 
             align="left"
+            className="lg:text-left text-center"
           />
-          <div className="space-y-12">
-            <div className="flex gap-8">
+          <div className="space-y-10 md:space-y-12">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 md:gap-8">
               <MapPin size={24} className="text-brand-dark shrink-0" />
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Endereço</span>
-                <p className="text-2xl font-serif text-brand-dark">{config.address}</p>
+                <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Endereço</span>
+                <p className="text-xl md:text-2xl font-serif text-brand-dark">{config.address}</p>
               </div>
             </div>
-            <div className="flex gap-8">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 md:gap-8">
               <Clock size={24} className="text-brand-dark shrink-0" />
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Horário</span>
-                <p className="text-2xl font-serif text-brand-dark">{config.hours}</p>
+                <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Horário</span>
+                <p className="text-xl md:text-2xl font-serif text-brand-dark">{config.hours}</p>
               </div>
             </div>
           </div>
@@ -789,47 +888,55 @@ const Location = ({ config }: { config: SiteConfig['footer'] }) => (
 );
 
 const Footer = ({ config }: { config: SiteConfig }) => (
-  <footer className="py-32 bg-white">
-    <div className="max-w-7xl mx-auto px-10">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-20 mb-32">
-        <div className="flex flex-col gap-8">
+  <footer className="py-20 md:py-32 bg-white">
+    <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-20 mb-20 md:mb-32">
+        <div className="flex flex-col gap-8 md:gap-10">
           <div className="flex flex-col">
-            <span className="font-serif text-xl tracking-widest text-brand-dark leading-none">{config.navbar.logo}</span>
+            <span className="font-serif text-lg md:text-xl tracking-widest text-brand-dark leading-none">{config.navbar.logo}</span>
             <span className="text-[8px] uppercase tracking-[0.3em] text-brand-muted mt-1">{config.navbar.subtitle}</span>
           </div>
-          <p className="text-[10px] text-brand-muted leading-relaxed font-medium uppercase tracking-wider">
+          <p className="text-[10px] text-brand-muted leading-relaxed font-medium uppercase tracking-[0.2em]">
             {config.footer.about}
           </p>
         </div>
 
-        <div className="flex flex-col gap-8">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-brand-dark">Navegação</span>
-          <ul className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8 md:gap-10">
+          <span className="text-[10px] uppercase tracking-[0.5em] font-bold text-brand-dark">Navegação</span>
+          <ul className="flex flex-col gap-3 md:gap-4">
             {config.navbar.links.map(item => (
               <li key={item.name}>
-                <a href={item.href} className="text-[10px] uppercase tracking-[0.2em] text-brand-muted hover:text-brand-dark transition-colors font-bold">{item.name}</a>
+                <a href={item.href} className="text-[10px] uppercase tracking-[0.2em] text-brand-muted hover:text-brand-dark transition-colors font-bold block py-1">
+                  {item.name}
+                </a>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="flex flex-col gap-8">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-brand-dark">Social</span>
-          <ul className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8 md:gap-10">
+          <span className="text-[10px] uppercase tracking-[0.5em] font-bold text-brand-dark">Social</span>
+          <ul className="flex flex-col gap-3 md:gap-4">
             {['Instagram', 'Facebook', 'TikTok'].map(item => (
               <li key={item}>
-                <a href="#" className="text-[10px] uppercase tracking-[0.2em] text-brand-muted hover:text-brand-dark transition-colors font-bold">{item}</a>
+                <a href="#" className="text-[10px] uppercase tracking-[0.2em] text-brand-muted hover:text-brand-dark transition-colors font-bold block py-1">
+                  {item}
+                </a>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="flex flex-col gap-8">
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-brand-dark">Local</span>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-brand-muted leading-relaxed font-bold">
-            {config.footer.address}<br />
-            {config.footer.hours}
-          </p>
+        <div className="flex flex-col gap-8 md:gap-10">
+          <span className="text-[10px] uppercase tracking-[0.5em] font-bold text-brand-dark">Local</span>
+          <div className="flex flex-col gap-4">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-brand-muted leading-relaxed font-bold">
+              {config.footer.address}
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-brand-muted leading-relaxed font-bold border-t border-black/5 pt-4">
+              {config.footer.hours}
+            </p>
+          </div>
         </div>
       </div>
 

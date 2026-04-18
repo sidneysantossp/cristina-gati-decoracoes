@@ -27,7 +27,10 @@ import {
   ChevronRight,
   Menu as MenuIcon,
   Sparkles,
-  Pencil
+  Pencil,
+  Upload,
+  Loader2,
+  X as XIcon
 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 
@@ -349,6 +352,84 @@ const ConfigEditor = () => {
   );
 };
 
+const ImageUpload = ({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, envie uma imagem.');
+      return;
+    }
+
+    // Limit to 2MB for base64 storage in Firestore
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Imagem muito grande. Limite de 2MB.');
+      return;
+    }
+
+    setLoading(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string;
+      onChange(base64);
+      setLoading(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <label className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">{label}</label>
+      <div 
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={onDrop}
+        className={cn(
+          "relative aspect-video border-2 border-dashed transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-brand-light p-6 overflow-hidden",
+          isDragging ? "border-brand-dark bg-stone-100" : "border-black/10 hover:border-brand-dark",
+          loading && "opacity-50 pointer-events-none"
+        )}
+      >
+        {value ? (
+          <>
+            <img src={value} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-4 z-10 text-white">
+              <label className="cursor-pointer flex flex-col items-center gap-2">
+                <Upload size={24} />
+                <span className="text-[8px] uppercase tracking-widest font-bold">Trocar Imagem</span>
+                <input type="file" className="hidden" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
+              </label>
+              <button onClick={() => onChange('')} className="flex flex-col items-center gap-2">
+                <XIcon size={24} />
+                <span className="text-[8px] uppercase tracking-widest font-bold">Remover</span>
+              </button>
+            </div>
+          </>
+        ) : (
+          <label className="cursor-pointer flex flex-col items-center gap-4 w-full">
+            <div className="p-4 bg-white rounded-full text-brand-muted">
+              {loading ? <Loader2 size={32} className="animate-spin" /> : <Upload size={32} />}
+            </div>
+            <div className="text-center">
+              <p className="text-xs font-serif text-brand-dark mb-1">Arraste ou clique para enviar</p>
+              <p className="text-[10px] text-brand-muted uppercase tracking-widest">PNG, JPG até 2MB</p>
+            </div>
+            <input type="file" className="hidden" accept="image/*" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
+          </label>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const HeroEditor = () => {
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [saving, setSaving] = useState(false);
@@ -388,7 +469,7 @@ const HeroEditor = () => {
           <h3 className="text-xl font-serif border-b pb-2">Conteúdo do Hero</h3>
           <Input label="Título Principal (Aceita <br />)" value={config.hero.title} onChange={(v) => setConfig({...config, hero: {...config.hero, title: v}})} />
           <Input label="Subtítulo Superior" value={config.hero.subtitle} onChange={(v) => setConfig({...config, hero: {...config.hero, subtitle: v}})} />
-          <Input label="Imagem de Fundo (URL)" value={config.hero.image} onChange={(v) => setConfig({...config, hero: {...config.hero, image: v}})} />
+          <ImageUpload label="Imagem de Fundo" value={config.hero.image} onChange={(v) => setConfig({...config, hero: {...config.hero, image: v}})} />
         </div>
         <div className="space-y-8">
           <h3 className="text-xl font-serif border-b pb-2">Preview</h3>
