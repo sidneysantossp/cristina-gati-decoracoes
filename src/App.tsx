@@ -207,14 +207,15 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
 };
 
 const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
-  <section className="relative min-h-[90vh] md:h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-20 md:py-0">
+  <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-32 md:py-0">
     <div className="absolute inset-0 z-0">
       <img 
         src={config.image} 
         alt="Hero Background" 
-        className="w-full h-full object-cover opacity-10 grayscale"
+        className="w-full h-full object-cover opacity-20 grayscale scale-105"
         referrerPolicy="no-referrer"
       />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/50" />
     </div>
 
     <div className="relative z-10 max-w-4xl pt-10 md:pt-0">
@@ -230,7 +231,7 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.1] px-4 md:px-0"
+        className="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.2] px-4 md:px-0"
         dangerouslySetInnerHTML={{ __html: config.title }}
       />
       

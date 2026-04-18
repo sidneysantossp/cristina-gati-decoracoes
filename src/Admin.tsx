@@ -510,7 +510,7 @@ const HeroEditor = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="space-y-8">
           <h3 className="text-xl font-serif border-b pb-2">Conteúdo do Hero</h3>
-          <Input label="Título Principal (Aceita <br />)" value={config.hero.title} onChange={(v) => setConfig({...config, hero: {...config.hero, title: v}})} />
+          <Input label="Título Principal (Dica: Use <br /> para quebra de linha)" value={config.hero.title} onChange={(v) => setConfig({...config, hero: {...config.hero, title: v}})} />
           <Input label="Subtítulo Superior" value={config.hero.subtitle} onChange={(v) => setConfig({...config, hero: {...config.hero, subtitle: v}})} />
           <ImageUpload label="Imagem de Fundo" value={config.hero.image} onChange={(v) => setConfig({...config, hero: {...config.hero, image: v}})} />
         </div>
@@ -649,23 +649,25 @@ const ServicesEditor = () => {
             <div className="w-24 aspect-[4/5] bg-brand-light overflow-hidden shrink-0">
               <img src={s.image} alt={s.title} className="w-full h-full object-cover grayscale" />
             </div>
-            <div className="flex-1 grid grid-cols-2 gap-6">
+            <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-8">
               <Input label="Título" value={s.title} onChange={(v) => handleUpdate(s.docId!, { title: v })} />
               <Input label="ID" value={s.id} onChange={(v) => handleUpdate(s.docId!, { id: v })} />
-              <div className="col-span-2 flex gap-4 items-end">
-                <div className="flex-1">
-                  <Input label="Imagem (URL)" value={s.image} onChange={(v) => handleUpdate(s.docId!, { image: v })} />
+              
+              <div className="col-span-2 space-y-4">
+                <div className="flex justify-between items-end">
+                  <label className="text-[10px] uppercase tracking-[0.3em] text-brand-muted font-medium">Imagem do Serviço</label>
+                  <button 
+                    onClick={() => generateImage(s)}
+                    disabled={generatingId === s.docId}
+                    className="flex items-center gap-2 text-[8px] uppercase tracking-[0.2em] font-bold text-brand-dark hover:underline disabled:opacity-50"
+                  >
+                    <Sparkles size={12} className={generatingId === s.docId ? 'animate-spin' : ''} />
+                    {generatingId === s.docId ? 'Gerando...' : 'Gerar com IA'}
+                  </button>
                 </div>
-                <button 
-                  onClick={() => generateImage(s)}
-                  disabled={generatingId === s.docId}
-                  className="bg-brand-dark text-white p-4 hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold"
-                  title="Gerar imagem com IA"
-                >
-                  <Sparkles size={16} className={generatingId === s.docId ? 'animate-spin' : ''} />
-                  {generatingId === s.docId ? 'Gerando...' : 'Gerar IA'}
-                </button>
+                <ImageUpload label="" value={s.image} onChange={(v) => handleUpdate(s.docId!, { image: v })} />
               </div>
+
               {errorInfo?.id === s.docId && (
                 <div className="col-span-2 text-[10px] text-red-500 uppercase tracking-widest font-bold animate-pulse">
                   {errorInfo.message} (Mantendo imagem atual)
@@ -676,7 +678,7 @@ const ServicesEditor = () => {
                 <textarea 
                   value={s.desc} 
                   onChange={(e) => handleUpdate(s.docId!, { desc: e.target.value })}
-                  className="w-full border border-black/10 p-4 font-serif text-sm outline-none focus:border-brand-dark"
+                  className="w-full border border-black/10 p-4 font-serif text-sm outline-none focus:border-brand-dark min-h-[100px]"
                 />
               </div>
             </div>
