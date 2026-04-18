@@ -82,6 +82,10 @@ interface SiteConfig {
     title: string;
     subtitle: string;
   };
+  services: {
+    title: string;
+    subtitle: string;
+  };
   footer: {
     about: string;
     whatsapp: string;
@@ -287,9 +291,13 @@ const INITIAL_CONFIG: SiteConfig = {
     title: 'QUEM VIVEU.',
     subtitle: 'Vozes de Emoção'
   },
+  services: {
+    title: 'Serviços',
+    subtitle: 'DA DECORAÇÃO AO CERIMONIAL'
+  },
   footer: {
     about: 'Curadoria de eventos e momentos inesquecíveis há mais de 10 anos.',
-    whatsapp: '(15) 99723-0588',
+    whatsapp: '15 99847-9593',
     email: 'contato@cristinagatti.com.br',
     address: 'Rodovia José de Carvalho, km 127,5 — Bairro da Paineira',
     hours: 'Segunda a Sábado, 9h às 18h'
@@ -305,7 +313,18 @@ const ConfigEditor = () => {
       const docRef = doc(db, 'config', 'site');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setConfig(docSnap.data() as SiteConfig);
+        const data = docSnap.data();
+        setConfig({
+          ...INITIAL_CONFIG,
+          ...data,
+          navbar: { ...INITIAL_CONFIG.navbar, ...(data.navbar || {}) },
+          hero: { ...INITIAL_CONFIG.hero, ...(data.hero || {}) },
+          about: { ...INITIAL_CONFIG.about, ...(data.about || {}) },
+          portfolio: { ...INITIAL_CONFIG.portfolio, ...(data.portfolio || {}) },
+          testimonials: { ...INITIAL_CONFIG.testimonials, ...(data.testimonials || {}) },
+          services: { ...INITIAL_CONFIG.services, ...(data.services || {}) },
+          footer: { ...INITIAL_CONFIG.footer, ...(data.footer || {}) },
+        } as SiteConfig);
       } else {
         setConfig(INITIAL_CONFIG);
       }
@@ -340,7 +359,7 @@ const ConfigEditor = () => {
           <h3 className="text-xl font-serif border-b pb-2">Sobre</h3>
           <Input label="Título Sobre" value={config.about.title} onChange={(v) => setConfig({...config, about: {...config.about, title: v}})} />
           <Input label="Subtítulo Sobre" value={config.about.subtitle} onChange={(v) => setConfig({...config, about: {...config.about, subtitle: v}})} />
-          <Input label="Imagem Sobre (URL)" value={config.about.image} onChange={(v) => setConfig({...config, about: {...config.about, image: v}})} />
+          <ImageUpload label="Imagem Sobre" value={config.about.image} onChange={(v) => setConfig({...config, about: {...config.about, image: v}})} />
         </div>
       </div>
       
@@ -361,6 +380,8 @@ const ConfigEditor = () => {
           <div className="grid grid-cols-1 gap-4">
             <Input label="Título Portfólio" value={config.portfolio.title} onChange={(v) => setConfig({...config, portfolio: {...config.portfolio, title: v}})} />
             <Input label="Subtítulo Portfólio" value={config.portfolio.subtitle} onChange={(v) => setConfig({...config, portfolio: {...config.portfolio, subtitle: v}})} />
+            <Input label="Título Serviços" value={config.services.title} onChange={(v) => setConfig({...config, services: {...config.services, title: v}})} />
+            <Input label="Subtítulo Serviços" value={config.services.subtitle} onChange={(v) => setConfig({...config, services: {...config.services, subtitle: v}})} />
             <Input label="Título Depoimentos" value={config.testimonials.title} onChange={(v) => setConfig({...config, testimonials: {...config.testimonials, title: v}})} />
             <Input label="Subtítulo Depoimentos" value={config.testimonials.subtitle} onChange={(v) => setConfig({...config, testimonials: {...config.testimonials, subtitle: v}})} />
           </div>
@@ -482,7 +503,18 @@ const HeroEditor = () => {
       const docRef = doc(db, 'config', 'site');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setConfig(docSnap.data() as SiteConfig);
+        const data = docSnap.data();
+        setConfig({
+          ...INITIAL_CONFIG,
+          ...data,
+          navbar: { ...INITIAL_CONFIG.navbar, ...(data.navbar || {}) },
+          hero: { ...INITIAL_CONFIG.hero, ...(data.hero || {}) },
+          about: { ...INITIAL_CONFIG.about, ...(data.about || {}) },
+          portfolio: { ...INITIAL_CONFIG.portfolio, ...(data.portfolio || {}) },
+          testimonials: { ...INITIAL_CONFIG.testimonials, ...(data.testimonials || {}) },
+          services: { ...INITIAL_CONFIG.services, ...(data.services || {}) },
+          footer: { ...INITIAL_CONFIG.footer, ...(data.footer || {}) },
+        } as SiteConfig);
       } else {
         setConfig(INITIAL_CONFIG);
       }

@@ -52,6 +52,10 @@ interface SiteConfig {
     title: string;
     subtitle: string;
   };
+  services: {
+    title: string;
+    subtitle: string;
+  };
   footer: {
     about: string;
     whatsapp: string;
@@ -242,7 +246,13 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12"
       >
         <Button variant="link" className="w-full sm:w-auto">VER PORTFÓLIO</Button>
-        <Button variant="link" className="w-full sm:w-auto">WHATSAPP</Button>
+        <Button 
+          variant="link" 
+          className="w-full sm:w-auto"
+          onClick={() => window.open(`https://wa.me/5515998479593`, '_blank')}
+        >
+          WHATSAPP
+        </Button>
       </motion.div>
     </div>
 
@@ -308,15 +318,15 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
         >
           <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-brand-muted font-medium">{config.subtitle}</span>
           <h2 
-            className="text-4xl md:text-7xl font-serif text-brand-dark leading-tight"
+            className="text-4xl md:text-5xl font-serif text-brand-dark leading-tight"
             dangerouslySetInnerHTML={{ __html: config.title }}
           />
           <div 
             className="space-y-6 md:space-y-8 text-brand-muted text-base md:text-lg leading-relaxed font-light"
             dangerouslySetInnerHTML={{ __html: config.content }}
           />
-          <a href="#" className="inline-flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-brand-dark group">
-            Conheça nossa curadoria
+          <a href="#contato" className="inline-flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-bold text-brand-dark group">
+            FALE CONOSCO
             <ArrowRight size={16} className="group-hover:translate-x-4 transition-transform text-brand-dark md:w-[18px]" />
           </a>
         </motion.div>
@@ -325,7 +335,7 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
   </section>
 );
 
-const Services = ({ services }: { services: Service[] }) => {
+const Services = ({ services, config }: { services: Service[]; config: SiteConfig['services'] }) => {
   return (
     <section id="servicos" className="py-20 md:py-40 bg-brand-light">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -336,8 +346,8 @@ const Services = ({ services }: { services: Service[] }) => {
           transition={{ duration: 0.8 }}
         >
           <SectionHeading 
-            subtitle="Nossa Especialidade" 
-            title="CURADORIA COMPLETA." 
+            subtitle={config.subtitle} 
+            title={config.title} 
             align="left"
             className="max-w-4xl"
           />
@@ -968,50 +978,65 @@ const LandingPage = () => {
   useEffect(() => {
     // Fetch Config
     const unsubConfig = onSnapshot(doc(db, 'config', 'site'), (docSnap) => {
+      const initialConfig: SiteConfig = {
+        navbar: {
+          logo: 'CRISTINA GATTI',
+          subtitle: 'CERIMONIAL & DESIGN',
+          links: [
+            { name: 'Início', href: '#' },
+            { name: 'Sobre', href: '#sobre' },
+            { name: 'Serviços', href: '#servicos' },
+            { name: 'Portfólio', href: '#portfolio' },
+            { name: 'Depoimentos', href: '#depoimentos' },
+            { name: 'Contato', href: '#contato' },
+          ]
+        },
+        hero: {
+          title: 'A essência de<br />momentos únicos.',
+          subtitle: 'CURADORIA EM EVENTOS',
+          image: 'https://picsum.photos/seed/wedding-decor/1920/1080'
+        },
+        about: {
+          title: 'Detalhes que<br />contam histórias.',
+          subtitle: 'Legado & Paixão',
+          content: '<p>A <strong class="text-brand-dark font-serif font-medium italic">Cristina Gatti</strong> nasceu do desejo de materializar o invisível: a emoção crua de um momento único.</p><p>Com mais de uma década de experiência, elevamos o conceito de decoração para uma curadoria artística, onde a estética minimalista e a harmonia se fundem para criar memórias perenes.</p>',
+          image: 'https://picsum.photos/seed/cristina-bold/1000/1000'
+        },
+        portfolio: {
+          title: 'FOCO RADICAL.',
+          subtitle: 'Galeria de Eventos'
+        },
+        testimonials: {
+          title: 'QUEM VIVEU.',
+          subtitle: 'Vozes de Emoção'
+        },
+        services: {
+          title: 'Serviços',
+          subtitle: 'DA DECORAÇÃO AO CERIMONIAL'
+        },
+        footer: {
+          about: 'Curadoria de eventos e momentos inesquecíveis há mais de 10 anos.',
+          whatsapp: '15 99847-9593',
+          email: 'contato@cristinagatti.com.br',
+          address: 'Rodovia José de Carvalho, km 127,5 — Bairro da Paineira',
+          hours: 'Segunda a Sábado, 9h às 18h'
+        }
+      };
+
       if (docSnap.exists()) {
-        setConfig(docSnap.data() as SiteConfig);
+        const data = docSnap.data();
+        setConfig({
+          ...initialConfig,
+          ...data,
+          navbar: { ...initialConfig.navbar, ...(data.navbar || {}) },
+          hero: { ...initialConfig.hero, ...(data.hero || {}) },
+          about: { ...initialConfig.about, ...(data.about || {}) },
+          portfolio: { ...initialConfig.portfolio, ...(data.portfolio || {}) },
+          testimonials: { ...initialConfig.testimonials, ...(data.testimonials || {}) },
+          services: { ...initialConfig.services, ...(data.services || {}) },
+          footer: { ...initialConfig.footer, ...(data.footer || {}) },
+        });
       } else {
-        // Initial Seed
-        const initialConfig: SiteConfig = {
-          navbar: {
-            logo: 'CRISTINA GATTI',
-            subtitle: 'CERIMONIAL & DESIGN',
-            links: [
-              { name: 'Início', href: '#' },
-              { name: 'Sobre', href: '#sobre' },
-              { name: 'Serviços', href: '#servicos' },
-              { name: 'Portfólio', href: '#portfolio' },
-              { name: 'Depoimentos', href: '#depoimentos' },
-              { name: 'Contato', href: '#contato' },
-            ]
-          },
-          hero: {
-            title: 'A essência de<br />momentos únicos.',
-            subtitle: 'CURADORIA EM EVENTOS',
-            image: 'https://picsum.photos/seed/wedding-decor/1920/1080'
-          },
-          about: {
-            title: 'Detalhes que<br />contam histórias.',
-            subtitle: 'Legado & Paixão',
-            content: '<p>A <strong class="text-brand-dark font-serif font-medium italic">Cristina Gatti</strong> nasceu do desejo de materializar o invisível: a emoção crua de um momento único.</p><p>Com mais de uma década de experiência, elevamos o conceito de decoração para uma curadoria artística, onde a estética minimalista e a harmonia se fundem para criar memórias perenes.</p>',
-            image: 'https://picsum.photos/seed/cristina-bold/1000/1000'
-          },
-          portfolio: {
-            title: 'FOCO RADICAL.',
-            subtitle: 'Galeria de Eventos'
-          },
-          testimonials: {
-            title: 'QUEM VIVEU.',
-            subtitle: 'Vozes de Emoção'
-          },
-          footer: {
-            about: 'Curadoria de eventos e momentos inesquecíveis há mais de 10 anos.',
-            whatsapp: '(15) 99723-0588',
-            email: 'contato@cristinagatti.com.br',
-            address: 'Rodovia José de Carvalho, km 127,5 — Bairro da Paineira',
-            hours: 'Segunda a Sábado, 9h às 18h'
-          }
-        };
         setConfig(initialConfig);
       }
     }, (error) => {
@@ -1095,7 +1120,7 @@ const LandingPage = () => {
       <Hero config={config.hero} />
       <Stats />
       <About config={config.about} />
-      <Services services={services} />
+      <Services services={services} config={config.services} />
       <Portfolio config={config.portfolio} items={portfolio} />
       <Testimonials config={config.testimonials} items={testimonials} />
       <Contact config={config.footer} />
