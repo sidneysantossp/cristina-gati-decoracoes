@@ -231,7 +231,7 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.2] px-4 md:px-0"
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.2] px-4 md:px-0"
         dangerouslySetInnerHTML={{ __html: config.title }}
       />
       
