@@ -426,9 +426,9 @@ const ImageUpload = ({ label, value, onChange }: { label: string; value: string;
       return;
     }
 
-    // Limit to 2MB for base64 storage in Firestore
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Imagem muito grande. Limite de 2MB.');
+    // Limit to 800KB for base64 storage in Firestore (doc limit 1MB)
+    if (file.size > 800 * 1024) {
+      alert('Imagem muito grande para o banco de dados. Por favor, use uma imagem de até 800KB (o banco de dados tem um limite técnico por item).');
       return;
     }
 
@@ -609,7 +609,12 @@ const ServicesEditor = () => {
   };
 
   const handleUpdate = async (docId: string, data: Partial<Service>) => {
-    await updateDoc(doc(db, 'services', docId), data);
+    try {
+      await updateDoc(doc(db, 'services', docId), data);
+    } catch (error: any) {
+      console.error("Error updating service:", error);
+      alert("Erro ao salvar: " + (error.message.includes('too large') ? "A imagem é muito grande para o banco de dados." : error.message));
+    }
   };
 
   const generateImage = async (service: Service) => {
@@ -754,7 +759,12 @@ const PortfolioEditor = () => {
   };
 
   const handleUpdate = async (docId: string, data: Partial<PortfolioItem>) => {
-    await updateDoc(doc(db, 'portfolio', docId), data);
+    try {
+      await updateDoc(doc(db, 'portfolio', docId), data);
+    } catch (error: any) {
+      console.error("Error updating portfolio:", error);
+      alert("Erro ao salvar: " + (error.message.includes('too large') ? "A imagem é muito grande para o banco de dados." : error.message));
+    }
   };
 
   return (
@@ -841,7 +851,12 @@ const TestimonialsEditor = () => {
   };
 
   const handleUpdate = async (docId: string, data: Partial<Testimonial>) => {
-    await updateDoc(doc(db, 'testimonials', docId), data);
+    try {
+      await updateDoc(doc(db, 'testimonials', docId), data);
+    } catch (error: any) {
+      console.error("Error updating testimonial:", error);
+      alert("Erro ao salvar: " + error.message);
+    }
   };
 
   return (

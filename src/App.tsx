@@ -550,7 +550,12 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
         </AnimatePresence>
 
         <div className="mt-24 text-center">
-          <Button variant="outline">Ver mais no Instagram</Button>
+          <Button 
+            variant="outline"
+            onClick={() => window.open('https://www.instagram.com/cristinadecoracoes_pilar/', '_blank')}
+          >
+            Ver mais no Instagram
+          </Button>
         </div>
       </div>
     </section>
@@ -956,7 +961,11 @@ const Footer = ({ config }: { config: SiteConfig }) => (
           © 2024 Cristina Gatti. Todos os direitos reservados.
         </span>
         <div className="flex items-center gap-12">
-          <Instagram size={18} className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors" />
+          <Instagram 
+            size={18} 
+            className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors"
+            onClick={() => window.open('https://www.instagram.com/cristinadecoracoes_pilar/', '_blank')}
+          />
           <Facebook size={18} className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors" />
           <Twitter size={18} className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors" />
         </div>
