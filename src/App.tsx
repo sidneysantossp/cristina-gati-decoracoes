@@ -235,7 +235,7 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-serif text-brand-dark mb-10 md:mb-16 leading-[1.2] px-4 md:px-0"
+        className="text-5xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-serif text-brand-dark mb-16 md:mb-16 leading-[1.2] px-4 md:px-0"
         dangerouslySetInnerHTML={{ __html: config.title }}
       />
       
@@ -243,11 +243,11 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.4 }}
-        className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12"
+        className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 mt-8 sm:mt-0"
       >
-        <Button variant="link" className="w-full sm:w-auto">VER PORTFÓLIO</Button>
+        <Button variant="outline" className="w-full sm:w-auto">VER PORTFÓLIO</Button>
         <Button 
-          variant="link" 
+          variant="outline" 
           className="w-full sm:w-auto"
           onClick={() => window.open(`https://wa.me/5515998479593`, '_blank')}
         >
