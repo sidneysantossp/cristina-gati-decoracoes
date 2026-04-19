@@ -467,7 +467,7 @@ const ImageUpload = ({ label, value, onChange }: { label: string; value: string;
       >
         {value ? (
           <>
-            <img src={value} alt="Preview" className="absolute inset-0 w-full h-full object-cover" />
+            <img src={value} alt="Preview" className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-4 z-10 text-white">
               <label className="cursor-pointer flex flex-col items-center gap-2">
                 <Upload size={24} />
@@ -1006,14 +1006,17 @@ const InstagramEditor = () => {
 
   const extractImageFromUrl = (url: string) => {
     if (!url) return '';
-    // Clean the URL to get the base post URL
-    const match = url.match(/(https?:\/\/(www\.)?instagram\.com\/(p|reels|reel)\/[^/?#&]+)/);
-    if (match) {
-      const baseLink = match[1];
-      // Instagram media endpoint for public posts
-      return `${baseLink}/media/?size=l`;
+    // Extract shortcode from various Instagram URL formats:
+    // https://www.instagram.com/p/SHORTCODE/
+    // https://www.instagram.com/reels/SHORTCODE/
+    // https://www.instagram.com/username/p/SHORTCODE/
+    const match = url.match(/(?:p|reels|reel)\/([A-Za-z0-9_-]+)/);
+    if (match && match[1]) {
+      const shortcode = match[1];
+      // Use the canonical public media endpoint
+      return `https://www.instagram.com/p/${shortcode}/media/?size=l`;
     }
-    return url; // Return as is if not an IG link
+    return url; // Return as is if not a recognizable IG link
   };
 
   const handleAdd = async () => {
