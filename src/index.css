@@ -8,6 +8,8 @@
   --color-brand-dark: #2D2D2D;
   --color-brand-light: #F9F9F9;
   --color-brand-muted: #7A7A7A;
+  --color-brand-soft: #E8CECD;
+  --color-brand-accent: #DCAFAC;
   --color-accent: #2D2D2D;
 }
 
@@ -30,5 +32,13 @@
   .text-outline {
     color: transparent;
     -webkit-text-stroke: 1.5px black;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

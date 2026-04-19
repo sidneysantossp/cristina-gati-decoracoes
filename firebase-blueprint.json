@@ -84,6 +84,15 @@
         "role": { "type": "string", "enum": ["admin", "editor"] },
         "name": { "type": "string" }
       }
+    },
+    "InstagramFeedItem": {
+      "title": "Item do Feed Instagram",
+      "description": "Uma foto exibida na seção Siga-nos",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "order": { "type": "number" }
+      }
     }
   },
   "firestore": {
@@ -102,6 +111,10 @@
     "testimonials": {
       "schema": "Testimonial",
       "description": "Depoimentos de clientes"
+    },
+    "instagram_feed": {
+      "schema": "InstagramFeedItem",
+      "description": "Fotos do feed do Instagram"
     },
     "users": {
       "schema": "AppUser",

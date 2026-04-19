@@ -211,7 +211,7 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
 };
 
 const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-32 md:py-0">
+  <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-32 md:py-0 bg-brand-soft/[0.05]">
     <div className="absolute inset-0 z-0">
       <img 
         src={config.image} 
@@ -219,7 +219,7 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         className="w-full h-full object-cover opacity-20 grayscale scale-105"
         referrerPolicy="no-referrer"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-soft/40 via-brand-soft/10 to-brand-soft/50 md:from-brand-soft/30 md:via-transparent md:to-brand-soft/40" />
     </div>
 
     <div className="relative z-10 max-w-4xl pt-10 md:pt-0">
@@ -245,10 +245,15 @@ const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
         transition={{ duration: 0.8, delay: 0.4 }}
         className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 mt-8 sm:mt-0"
       >
-        <Button variant="outline" className="w-full sm:w-auto">VER PORTFÓLIO</Button>
         <Button 
           variant="outline" 
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto hover:bg-brand-accent hover:border-brand-accent hover:text-white transition-all duration-300 border-brand-dark"
+        >
+          VER PORTFÓLIO
+        </Button>
+        <Button 
+          variant="primary" 
+          className="w-full sm:w-auto bg-brand-accent text-white border-brand-accent hover:bg-brand-accent/90 transition-all duration-300"
           onClick={() => window.open(`https://wa.me/5515998479593`, '_blank')}
         >
           WHATSAPP
@@ -305,7 +310,7 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
           <img 
             src={config.image} 
             alt="Cristina Gatti" 
-            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+            className="w-full h-full object-cover transition-all duration-1000"
             referrerPolicy="no-referrer"
           />
         </motion.div>
@@ -368,10 +373,10 @@ const Services = ({ services, config }: { services: Service[]; config: SiteConfi
                 <img 
                   src={service.image} 
                   alt={service.title} 
-                  className="w-full h-full object-cover grayscale opacity-10 group-hover:opacity-30 group-hover:scale-110 group-hover:grayscale-0 transition-all duration-1000"
+                  className="w-full h-full object-cover opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-all duration-1000"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/90 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent"></div>
               </div>
 
               {/* Content */}
@@ -453,7 +458,7 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
               <img 
                 src={item.url} 
                 alt={`Portfolio item ${idx}`} 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+                className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -551,7 +556,8 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
 
         <div className="mt-24 text-center">
           <Button 
-            variant="outline"
+            variant="primary"
+            className="bg-brand-accent hover:bg-brand-accent/90 border-brand-accent"
             onClick={() => window.open('https://www.instagram.com/cristinadecoracoes_pilar/', '_blank')}
           >
             Ver mais no Instagram
@@ -577,7 +583,7 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
             title={config.title} 
           />
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
+        <div className="md:grid md:grid-cols-3 gap-8 md:gap-16 flex overflow-x-auto md:overflow-visible pb-8 md:pb-0 hide-scrollbar snap-x snap-mandatory">
           {items.map((t, idx) => (
             <motion.div 
               key={idx}
@@ -585,7 +591,7 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="flex flex-col gap-6 md:gap-10 p-8 md:p-12 border border-black/5 bg-white"
+              className="flex-shrink-0 w-[85vw] md:w-auto flex flex-col gap-6 md:gap-10 p-8 md:p-12 border border-black/5 bg-white snap-center mr-6 md:mr-0"
             >
               <p className="text-lg md:text-xl font-serif italic text-brand-dark/80 leading-relaxed">
                 "{t.quote}"
@@ -597,6 +603,65 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+};
+
+const InstagramCarousel = ({ items }: { items: { url: string }[] }) => {
+  const defaultImages = [
+    'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1541250848049-b4f71413cc30?q=80&w=800&auto=format&fit=crop',
+  ];
+
+  const displayImages = items.length > 0 ? items.map(i => i.url) : defaultImages;
+
+  return (
+    <section className="py-20 md:py-32 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 mb-12 flex justify-between items-end">
+        <div>
+          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-brand-muted mb-4 block font-medium">Instagram</span>
+          <h2 className="text-3xl md:text-5xl font-serif text-brand-dark">Siga-nos no Instagram</h2>
+        </div>
+      </div>
+
+      <div className="relative group">
+        <motion.div 
+          className="flex gap-4 md:gap-8 px-6 md:px-10 cursor-grab active:cursor-grabbing"
+          drag="x"
+          dragConstraints={{ right: 0, left: -2000 }}
+        >
+          {displayImages.map((src, idx) => (
+            <motion.div 
+              key={idx}
+              className="flex-shrink-0 w-64 md:w-80 aspect-square overflow-hidden bg-brand-light relative"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.4 }}
+            >
+              <img 
+                src={src} 
+                alt={`Instagram ${idx}`} 
+                className="w-full h-full object-cover transition-all duration-700"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="mt-12 text-center">
+        <a 
+          href="https://www.instagram.com/cristinadecoracoes_pilar/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex flex-col items-center gap-2 group"
+        >
+          <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-brand-accent group-hover:text-brand-dark transition-colors font-semibold">
+            @cristinadecoracoes_pilar
+          </span>
+          <div className="w-8 h-[1px] bg-brand-accent group-hover:w-16 group-hover:bg-brand-dark transition-all duration-500" />
+        </a>
       </div>
     </section>
   );
@@ -824,7 +889,7 @@ const Contact = ({ config }: { config: SiteConfig['footer'] }) => {
             </div>
             
             <div className="flex flex-col gap-6">
-              <Button type="submit" disabled={isSubmitting} className="w-full">
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-brand-accent hover:bg-brand-accent/90 border-brand-accent">
                 {isSubmitting ? 'Enviando...' : 'Enviar Solicitação'}
               </Button>
               
@@ -887,7 +952,7 @@ const Location = ({ config }: { config: SiteConfig['footer'] }) => (
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="aspect-video bg-white border-4 border-black/10 p-2 grayscale"
+          className="aspect-video bg-white border-4 border-black/10 p-2"
         >
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3654.67562854321!2d-47.4234567!3d-23.7123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQyJzQ0LjQiUyA0N8KwMjUnMjQuNCJX!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" 
@@ -982,6 +1047,7 @@ const LandingPage = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [instagramFeed, setInstagramFeed] = useState<{ url: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -1113,11 +1179,18 @@ const LandingPage = () => {
       setLoading(false);
     });
 
+    // Fetch Instagram Feed
+    const qInsta = query(collection(db, 'instagram_feed'), orderBy('order', 'asc'));
+    const unsubInsta = onSnapshot(qInsta, (snapshot) => {
+      setInstagramFeed(snapshot.docs.map(doc => doc.data() as any));
+    });
+
     return () => {
       unsubConfig();
       unsubServices();
       unsubPortfolio();
       unsubTestimonials();
+      unsubInsta();
     };
   }, []);
 
@@ -1132,6 +1205,7 @@ const LandingPage = () => {
       <Services services={services} config={config.services} />
       <Portfolio config={config.portfolio} items={portfolio} />
       <Testimonials config={config.testimonials} items={testimonials} />
+      <InstagramCarousel items={instagramFeed} />
       <Contact config={config.footer} />
       <Location config={config.footer} />
       <Footer config={config} />

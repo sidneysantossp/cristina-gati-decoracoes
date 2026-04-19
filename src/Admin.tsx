@@ -23,6 +23,7 @@ import {
   Trash2, 
   Save, 
   LogOut,
+  Instagram,
   Users as UsersIcon,
   ChevronRight,
   Menu as MenuIcon,
@@ -130,7 +131,7 @@ interface AppUser {
 
 const AdminPanel = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<'config' | 'hero' | 'services' | 'portfolio' | 'testimonials' | 'users'>('config');
+  const [activeTab, setActiveTab] = useState<'config' | 'hero' | 'services' | 'portfolio' | 'testimonials' | 'users' | 'instagram'>('config');
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -206,6 +207,7 @@ const AdminPanel = () => {
           <TabButton active={activeTab === 'services'} onClick={() => setActiveTab('services')} icon={<Layout size={18} />} label="Serviços" />
           <TabButton active={activeTab === 'portfolio'} onClick={() => setActiveTab('portfolio')} icon={<ImageIcon size={18} />} label="Portfólio" />
           <TabButton active={activeTab === 'testimonials'} onClick={() => setActiveTab('testimonials')} icon={<MessageSquare size={18} />} label="Depoimentos" />
+          <TabButton active={activeTab === 'instagram'} onClick={() => setActiveTab('instagram')} icon={<Instagram size={18} />} label="Instagram" />
           {isAdmin && (
             <TabButton active={activeTab === 'users'} onClick={() => setActiveTab('users')} icon={<UsersIcon size={18} />} label="Usuários" />
           )}
@@ -238,6 +240,7 @@ const AdminPanel = () => {
           {activeTab === 'services' && <ServicesEditor />}
           {activeTab === 'portfolio' && <PortfolioEditor />}
           {activeTab === 'testimonials' && <TestimonialsEditor />}
+          {activeTab === 'instagram' && <InstagramEditor />}
           {activeTab === 'users' && isAdmin && <UsersEditor />}
         </div>
       </main>
@@ -983,6 +986,75 @@ const UsersEditor = () => {
           ))}
           {users.length === 0 && <p className="text-center py-10 text-brand-muted font-serif italic">Nenhum usuário adicional cadastrado.</p>}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const InstagramEditor = () => {
+  const [items, setItems] = useState<{ url: string; docId?: string; order: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const q = query(collection(db, 'instagram_feed'), orderBy('order', 'asc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setItems(snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id } as any)));
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleAdd = async () => {
+    await addDoc(collection(db, 'instagram_feed'), {
+      url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
+      order: items.length
+    });
+  };
+
+  const handleDelete = async (docId: string) => {
+    if (confirm('Remover esta imagem do feed?')) {
+      await deleteDoc(doc(db, 'instagram_feed', docId));
+    }
+  };
+
+  const handleUpdate = async (docId: string, data: any) => {
+    try {
+      await updateDoc(doc(db, 'instagram_feed', docId), data);
+    } catch (error: any) {
+      alert("Erro ao salvar: " + error.message);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex justify-between items-center text-brand-dark">
+        <div>
+          <h3 className="text-xl font-serif">Feed Instagram</h3>
+          <p className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">
+            Escolha as melhores fotos do seu Instagram para exibir no site
+          </p>
+        </div>
+        <button onClick={handleAdd} className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-brand-dark border border-brand-dark px-4 py-2 hover:bg-brand-dark hover:text-white transition-all">
+          <Plus size={16} /> Adicionar Foto
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {items.map((item) => (
+          <div key={item.docId} className="border border-black/5 p-4 bg-brand-light/20 flex flex-col gap-4">
+            <ImageUpload 
+              label="Foto do Instagram" 
+              value={item.url} 
+              onChange={(v) => handleUpdate(item.docId!, { url: v })} 
+            />
+            <button 
+              onClick={() => handleDelete(item.docId!)} 
+              className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700 transition-colors py-2 border border-red-100 hover:bg-red-50"
+            >
+              <Trash2 size={14} /> Remover do Feed
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

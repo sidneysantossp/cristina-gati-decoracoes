@@ -57,9 +57,19 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /instagram_feed/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /users/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       allow write: if isAdmin();
+    }
+
+    // Default catch-all
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
