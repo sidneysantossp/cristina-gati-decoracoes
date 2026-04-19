@@ -992,7 +992,7 @@ const UsersEditor = () => {
 };
 
 const InstagramEditor = () => {
-  const [items, setItems] = useState<{ url: string; docId?: string; order: number }[]>([]);
+  const [items, setItems] = useState<{ url: string; postUrl?: string; docId?: string; order: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -1004,9 +1004,22 @@ const InstagramEditor = () => {
     return () => unsubscribe();
   }, []);
 
+  const extractImageFromUrl = (url: string) => {
+    if (!url) return '';
+    // Clean the URL to get the base post URL
+    const match = url.match(/(https?:\/\/(www\.)?instagram\.com\/(p|reels|reel)\/[^/?#&]+)/);
+    if (match) {
+      const baseLink = match[1];
+      // Instagram media endpoint for public posts
+      return `${baseLink}/media/?size=l`;
+    }
+    return url; // Return as is if not an IG link
+  };
+
   const handleAdd = async () => {
     await addDoc(collection(db, 'instagram_feed'), {
       url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
+      postUrl: '',
       order: items.length
     });
   };
@@ -1025,37 +1038,63 @@ const InstagramEditor = () => {
     }
   };
 
+  const handlePostUrlChange = (docId: string, postUrl: string) => {
+    const imageUrl = extractImageFromUrl(postUrl);
+    handleUpdate(docId, { postUrl, url: imageUrl || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop' });
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex justify-between items-center text-brand-dark">
         <div>
           <h3 className="text-xl font-serif">Feed Instagram</h3>
           <p className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">
-            Escolha as melhores fotos do seu Instagram para exibir no site
+            Cole o link do post do Instagram ou envie uma imagem manualmente
           </p>
         </div>
         <button onClick={handleAdd} className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-brand-dark border border-brand-dark px-4 py-2 hover:bg-brand-dark hover:text-white transition-all">
-          <Plus size={16} /> Adicionar Foto
+          <Plus size={16} /> Adicionar Item
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {items.map((item) => (
-          <div key={item.docId} className="border border-black/5 p-4 bg-brand-light/20 flex flex-col gap-4">
-            <ImageUpload 
-              label="Foto do Instagram" 
-              value={item.url} 
-              onChange={(v) => handleUpdate(item.docId!, { url: v })} 
-            />
-            <button 
-              onClick={() => handleDelete(item.docId!)} 
-              className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700 transition-colors py-2 border border-red-100 hover:bg-red-50"
-            >
-              <Trash2 size={14} /> Remover do Feed
-            </button>
+          <div key={item.docId} className="border border-black/5 p-8 bg-brand-light/20 flex flex-col md:flex-row gap-8 items-start relative">
+            <div className="w-full md:w-48 shrink-0">
+              <ImageUpload 
+                label="Preview da Imagem" 
+                value={item.url} 
+                onChange={(v) => handleUpdate(item.docId!, { url: v })} 
+              />
+            </div>
+            
+            <div className="flex-1 flex flex-col gap-6 w-full">
+              <Input 
+                label="Link do Post" 
+                value={item.postUrl || ''} 
+                onChange={(v) => handlePostUrlChange(item.docId!, v)} 
+              />
+              <p className="text-[9px] text-brand-muted italic">
+                Dica: Cole o link de um post público (ex: instagram.com/p/...) para extrair a imagem automaticamente.
+              </p>
+              
+              <div className="mt-auto pt-6 border-t border-black/5">
+                <button 
+                  onClick={() => handleDelete(item.docId!)} 
+                  className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700 transition-colors"
+                >
+                  <Trash2 size={14} /> Remover Item
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>
+      {items.length === 0 && (
+        <div className="py-20 text-center border-2 border-dashed border-black/5 text-brand-muted font-serif italic text-sm">
+          Nenhum item no feed. Clique em "Adicionar Item" para começar.
+        </div>
+      )}
     </div>
   );
 };
