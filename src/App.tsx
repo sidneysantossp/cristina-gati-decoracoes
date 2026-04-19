@@ -1028,14 +1028,14 @@ const Footer = ({ config }: { config: SiteConfig }) => (
         <div className="flex items-center gap-12">
           <Instagram 
             size={18} 
-            className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors"
+            className="text-brand-accent hover:opacity-70 cursor-pointer transition-colors"
             onClick={() => window.open('https://www.instagram.com/cristinadecoracoes_pilar/', '_blank')}
           />
-          <Facebook size={18} className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors" />
-          <Twitter size={18} className="text-brand-muted hover:text-brand-dark cursor-pointer transition-colors" />
+          <Facebook size={18} className="text-brand-accent hover:opacity-70 cursor-pointer transition-colors" />
+          <Twitter size={18} className="text-brand-accent hover:opacity-70 cursor-pointer transition-colors" />
         </div>
         <span className="text-[9px] uppercase tracking-[0.3em] text-brand-muted font-medium">
-          Desenvolvido por AIS
+          Desenvolvido por <a href="https://auditseo.com.br" target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline">AUDITSEO</a>
         </span>
       </div>
     </div>
