@@ -169,12 +169,6 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
           ))}
         </div>
 
-        <div className="hidden lg:block">
-          <a href="#contato" className="text-[10px] uppercase tracking-[0.2em] font-bold text-brand-dark">
-            CONTATO
-          </a>
-        </div>
-
         {/* Mobile Toggle */}
         <button className="lg:hidden text-brand-dark" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -305,7 +299,7 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="relative aspect-square overflow-hidden border-2 md:border-4 border-brand-dark order-2 lg:order-1"
+          className="relative aspect-square overflow-hidden border border-brand-accent order-2 lg:order-1"
         >
           <img 
             src={config.image} 
