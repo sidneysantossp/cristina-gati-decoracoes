@@ -131,7 +131,7 @@ interface AppUser {
 
 const AdminPanel = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [activeTab, setActiveTab] = useState<'config' | 'hero' | 'services' | 'portfolio' | 'testimonials' | 'users' | 'instagram'>('config');
+  const [activeTab, setActiveTab] = useState<'config' | 'hero' | 'services' | 'portfolio' | 'testimonials' | 'users'>('config');
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -207,7 +207,6 @@ const AdminPanel = () => {
           <TabButton active={activeTab === 'services'} onClick={() => setActiveTab('services')} icon={<Layout size={18} />} label="Serviços" />
           <TabButton active={activeTab === 'portfolio'} onClick={() => setActiveTab('portfolio')} icon={<ImageIcon size={18} />} label="Portfólio" />
           <TabButton active={activeTab === 'testimonials'} onClick={() => setActiveTab('testimonials')} icon={<MessageSquare size={18} />} label="Depoimentos" />
-          <TabButton active={activeTab === 'instagram'} onClick={() => setActiveTab('instagram')} icon={<Instagram size={18} />} label="Instagram" />
           {isAdmin && (
             <TabButton active={activeTab === 'users'} onClick={() => setActiveTab('users')} icon={<UsersIcon size={18} />} label="Usuários" />
           )}
@@ -229,7 +228,7 @@ const AdminPanel = () => {
               {isAdmin && <span className="text-[8px] uppercase tracking-widest text-brand-dark font-bold">Administrador</span>}
             </div>
             <div className="w-8 h-8 rounded-full bg-brand-dark/10 overflow-hidden">
-              <img src={user.photoURL || ''} alt="User" className="w-full h-full object-cover" />
+              {user.photoURL && <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />}
             </div>
           </div>
         </header>
@@ -240,7 +239,6 @@ const AdminPanel = () => {
           {activeTab === 'services' && <ServicesEditor />}
           {activeTab === 'portfolio' && <PortfolioEditor />}
           {activeTab === 'testimonials' && <TestimonialsEditor />}
-          {activeTab === 'instagram' && <InstagramEditor />}
           {activeTab === 'users' && isAdmin && <UsersEditor />}
         </div>
       </main>
@@ -467,7 +465,12 @@ const ImageUpload = ({ label, value, onChange }: { label: string; value: string;
       >
         {value ? (
           <>
-            <img src={value} alt="Preview" className="absolute inset-0 w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img 
+              src={value} 
+              alt="Preview" 
+              className="absolute inset-0 w-full h-full object-cover" 
+              referrerPolicy="no-referrer" 
+            />
             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-4 z-10 text-white">
               <label className="cursor-pointer flex flex-col items-center gap-2">
                 <Upload size={24} />
@@ -552,11 +555,13 @@ const HeroEditor = () => {
         <div className="space-y-8">
           <h3 className="text-xl font-serif border-b pb-2">Preview</h3>
           <div className="relative aspect-video bg-brand-light overflow-hidden flex items-center justify-center p-8 border border-black/5">
-            <img 
-              src={config.hero.image} 
-              alt="Preview" 
-              className="absolute inset-0 w-full h-full object-cover opacity-10 grayscale"
-            />
+            {config.hero.image && (
+              <img 
+                src={config.hero.image} 
+                alt="Preview" 
+                className="absolute inset-0 w-full h-full object-cover opacity-10 grayscale"
+              />
+            )}
             <div className="relative z-10 text-center">
               <span className="block text-[6px] uppercase tracking-[0.4em] text-brand-muted mb-4 font-medium">{config.hero.subtitle}</span>
               <h1 className="text-2xl font-serif text-brand-dark mb-6 leading-tight" dangerouslySetInnerHTML={{ __html: config.hero.title }} />
@@ -687,7 +692,7 @@ const ServicesEditor = () => {
         {services.map((s) => (
           <div key={s.docId} className="border border-black/5 p-8 flex gap-8 items-start group">
             <div className="w-24 aspect-[4/5] bg-brand-light overflow-hidden shrink-0">
-              <img src={s.image} alt={s.title} className="w-full h-full object-cover grayscale" />
+              {s.image && <img src={s.image} alt={s.title} className="w-full h-full object-cover grayscale" />}
             </div>
             <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-8">
               <Input label="Título" value={s.title} onChange={(v) => handleUpdate(s.docId!, { title: v })} />
@@ -782,7 +787,7 @@ const PortfolioEditor = () => {
         {items.map((item: any) => (
           <div key={item.docId} className="border border-black/5 p-6 flex gap-6 items-start bg-brand-light/20 group">
             <div className="w-20 aspect-square bg-white overflow-hidden shrink-0 border border-black/5">
-              <img src={item.url} alt="Portfolio" className="w-full h-full object-cover grayscale" />
+              {item.url && <img src={item.url} alt="Portfolio" className="w-full h-full object-cover grayscale" />}
             </div>
             <div className="flex-1 space-y-4">
               {editingId === item.docId ? (
@@ -987,117 +992,6 @@ const UsersEditor = () => {
           {users.length === 0 && <p className="text-center py-10 text-brand-muted font-serif italic">Nenhum usuário adicional cadastrado.</p>}
         </div>
       </div>
-    </div>
-  );
-};
-
-const InstagramEditor = () => {
-  const [items, setItems] = useState<{ url: string; postUrl?: string; docId?: string; order: number }[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const q = query(collection(db, 'instagram_feed'), orderBy('order', 'asc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setItems(snapshot.docs.map(doc => ({ ...doc.data(), docId: doc.id } as any)));
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const extractImageFromUrl = (url: string) => {
-    if (!url) return '';
-    // Extract shortcode from various Instagram URL formats:
-    // https://www.instagram.com/p/SHORTCODE/
-    // https://www.instagram.com/reels/SHORTCODE/
-    // https://www.instagram.com/username/p/SHORTCODE/
-    const match = url.match(/(?:p|reels|reel)\/([A-Za-z0-9_-]+)/);
-    if (match && match[1]) {
-      const shortcode = match[1];
-      // Use the canonical public media endpoint
-      return `https://www.instagram.com/p/${shortcode}/media/?size=l`;
-    }
-    return url; // Return as is if not a recognizable IG link
-  };
-
-  const handleAdd = async () => {
-    await addDoc(collection(db, 'instagram_feed'), {
-      url: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
-      postUrl: '',
-      order: items.length
-    });
-  };
-
-  const handleDelete = async (docId: string) => {
-    if (confirm('Remover esta imagem do feed?')) {
-      await deleteDoc(doc(db, 'instagram_feed', docId));
-    }
-  };
-
-  const handleUpdate = async (docId: string, data: any) => {
-    try {
-      await updateDoc(doc(db, 'instagram_feed', docId), data);
-    } catch (error: any) {
-      alert("Erro ao salvar: " + error.message);
-    }
-  };
-
-  const handlePostUrlChange = (docId: string, postUrl: string) => {
-    const imageUrl = extractImageFromUrl(postUrl);
-    handleUpdate(docId, { postUrl, url: imageUrl || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop' });
-  };
-
-  return (
-    <div className="flex flex-col gap-8">
-      <div className="flex justify-between items-center text-brand-dark">
-        <div>
-          <h3 className="text-xl font-serif">Feed Instagram</h3>
-          <p className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">
-            Cole o link do post do Instagram ou envie uma imagem manualmente
-          </p>
-        </div>
-        <button onClick={handleAdd} className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-brand-dark border border-brand-dark px-4 py-2 hover:bg-brand-dark hover:text-white transition-all">
-          <Plus size={16} /> Adicionar Item
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {items.map((item) => (
-          <div key={item.docId} className="border border-black/5 p-8 bg-brand-light/20 flex flex-col md:flex-row gap-8 items-start relative">
-            <div className="w-full md:w-48 shrink-0">
-              <ImageUpload 
-                label="Preview da Imagem" 
-                value={item.url} 
-                onChange={(v) => handleUpdate(item.docId!, { url: v })} 
-              />
-            </div>
-            
-            <div className="flex-1 flex flex-col gap-6 w-full">
-              <Input 
-                label="Link do Post" 
-                value={item.postUrl || ''} 
-                onChange={(v) => handlePostUrlChange(item.docId!, v)} 
-              />
-              <p className="text-[9px] text-brand-muted italic">
-                Dica: Cole o link de um post público (ex: instagram.com/p/...) para extrair a imagem automaticamente.
-              </p>
-              
-              <div className="mt-auto pt-6 border-t border-black/5">
-                <button 
-                  onClick={() => handleDelete(item.docId!)} 
-                  className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700 transition-colors"
-                >
-                  <Trash2 size={14} /> Remover Item
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      {items.length === 0 && (
-        <div className="py-20 text-center border-2 border-dashed border-black/5 text-brand-muted font-serif italic text-sm">
-          Nenhum item no feed. Clique em "Adicionar Item" para começar.
-        </div>
-      )}
     </div>
   );
 };

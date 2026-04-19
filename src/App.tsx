@@ -207,12 +207,14 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
 const Hero = ({ config }: { config: SiteConfig['hero'] }) => (
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-10 text-center py-32 md:py-0 bg-brand-soft/[0.05]">
     <div className="absolute inset-0 z-0">
-      <img 
-        src={config.image} 
-        alt="Hero Background" 
-        className="w-full h-full object-cover opacity-20 grayscale scale-105"
-        referrerPolicy="no-referrer"
-      />
+      {config.image && (
+        <img 
+          src={config.image} 
+          alt="Hero Background" 
+          className="w-full h-full object-cover opacity-20 grayscale scale-105"
+          referrerPolicy="no-referrer"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-b from-brand-soft/40 via-brand-soft/10 to-brand-soft/50 md:from-brand-soft/30 md:via-transparent md:to-brand-soft/40" />
     </div>
 
@@ -301,12 +303,14 @@ const About = ({ config }: { config: SiteConfig['about'] }) => (
           transition={{ duration: 0.8 }}
           className="relative aspect-square overflow-hidden border border-brand-accent order-2 lg:order-1"
         >
-          <img 
-            src={config.image} 
-            alt="Cristina Gatti" 
-            className="w-full h-full object-cover transition-all duration-1000"
-            referrerPolicy="no-referrer"
-          />
+          {config.image && (
+            <img 
+              src={config.image} 
+              alt="Cristina Gatti" 
+              className="w-full h-full object-cover transition-all duration-1000"
+              referrerPolicy="no-referrer"
+            />
+          )}
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
@@ -364,12 +368,14 @@ const Services = ({ services, config }: { services: Service[]; config: SiteConfi
             >
               {/* Background Image */}
               <div className="absolute inset-0 z-0">
-                <img 
-                  src={service.image} 
-                  alt={service.title} 
-                  className="w-full h-full object-cover opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-all duration-1000"
-                  referrerPolicy="no-referrer"
-                />
+                {service.image && (
+                  <img 
+                    src={service.image} 
+                    alt={service.title} 
+                    className="w-full h-full object-cover opacity-30 group-hover:opacity-60 group-hover:scale-110 transition-all duration-1000"
+                    referrerPolicy="no-referrer"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent"></div>
               </div>
 
@@ -449,12 +455,14 @@ const Portfolio = ({ config, items }: { config: SiteConfig['portfolio'], items: 
               transition={{ duration: 0.6, delay: (idx % 4) * 0.1 }}
               className="aspect-square overflow-hidden group relative border-2 border-black/5 hover:border-brand-dark transition-all duration-500 bg-white"
             >
-              <img 
-                src={item.url} 
-                alt={`Portfolio item ${idx}`} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
-                referrerPolicy="no-referrer"
-              />
+              {item.url && (
+                <img 
+                  src={item.url} 
+                  alt={`Portfolio item ${idx}`} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
+                  referrerPolicy="no-referrer"
+                />
+              )}
               <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button 
                   onClick={(e) => {
@@ -597,65 +605,6 @@ const Testimonials = ({ config, items }: { config: SiteConfig['testimonials'], i
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
-
-const InstagramCarousel = ({ items }: { items: { url: string }[] }) => {
-  const defaultImages = [
-    'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1541250848049-b4f71413cc30?q=80&w=800&auto=format&fit=crop',
-  ];
-
-  const displayImages = items.length > 0 ? items.map(i => i.url) : defaultImages;
-
-  return (
-    <section className="py-20 md:py-32 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 mb-12 flex justify-between items-end">
-        <div>
-          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.4em] text-brand-muted mb-4 block font-medium">Instagram</span>
-          <h2 className="text-3xl md:text-5xl font-serif text-brand-dark">Siga-nos no Instagram</h2>
-        </div>
-      </div>
-
-      <div className="relative group">
-        <motion.div 
-          className="flex gap-4 md:gap-8 px-6 md:px-10 cursor-grab active:cursor-grabbing"
-          drag="x"
-          dragConstraints={{ right: 0, left: -2000 }}
-        >
-          {displayImages.map((src, idx) => (
-            <motion.div 
-              key={idx}
-              className="flex-shrink-0 w-64 md:w-80 aspect-square overflow-hidden bg-brand-light relative"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.4 }}
-            >
-              <img 
-                src={src} 
-                alt={`Instagram ${idx}`} 
-                className="w-full h-full object-cover transition-all duration-700"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-
-      <div className="mt-12 text-center">
-        <a 
-          href="https://www.instagram.com/cristinadecoracoes_pilar/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex flex-col items-center gap-2 group"
-        >
-          <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-brand-accent group-hover:text-brand-dark transition-colors font-semibold">
-            @cristinadecoracoes_pilar
-          </span>
-          <div className="w-8 h-[1px] bg-brand-accent group-hover:w-16 group-hover:bg-brand-dark transition-all duration-500" />
-        </a>
       </div>
     </section>
   );
@@ -1041,7 +990,6 @@ const LandingPage = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [instagramFeed, setInstagramFeed] = useState<{ url: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -1173,18 +1121,11 @@ const LandingPage = () => {
       setLoading(false);
     });
 
-    // Fetch Instagram Feed
-    const qInsta = query(collection(db, 'instagram_feed'), orderBy('order', 'asc'));
-    const unsubInsta = onSnapshot(qInsta, (snapshot) => {
-      setInstagramFeed(snapshot.docs.map(doc => doc.data() as any));
-    });
-
     return () => {
       unsubConfig();
       unsubServices();
       unsubPortfolio();
       unsubTestimonials();
-      unsubInsta();
     };
   }, []);
 
@@ -1199,7 +1140,6 @@ const LandingPage = () => {
       <Services services={services} config={config.services} />
       <Portfolio config={config.portfolio} items={portfolio} />
       <Testimonials config={config.testimonials} items={testimonials} />
-      <InstagramCarousel items={instagramFeed} />
       <Contact config={config.footer} />
       <Location config={config.footer} />
       <Footer config={config} />
