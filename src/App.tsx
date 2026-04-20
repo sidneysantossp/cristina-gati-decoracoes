@@ -280,9 +280,9 @@ const Stats = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="flex flex-col items-center md:items-start text-center md:text-left gap-2 md:gap-4"
+              className="flex flex-col items-center text-center gap-2 md:gap-4"
             >
-              <span className="text-4xl md:text-6xl font-serif text-brand-dark tracking-tight">{stat.value}</span>
+              <span className="text-4xl md:text-6xl font-serif text-brand-accent tracking-tight">{stat.value}</span>
               <span className="text-[8px] md:text-[10px] uppercase tracking-[0.2em] text-brand-muted font-medium">{stat.label}</span>
             </motion.div>
           ))}
@@ -966,7 +966,7 @@ const Footer = ({ config }: { config: SiteConfig }) => (
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-10 pt-16 border-t border-black/5">
         <span className="text-[9px] uppercase tracking-[0.3em] text-brand-muted font-medium">
-          © 2024 Cristina Gatti. Todos os direitos reservados.
+          © 2026 Cristina Gatti. Todos os direitos reservados.
         </span>
         <div className="flex items-center gap-12">
           <Instagram 
