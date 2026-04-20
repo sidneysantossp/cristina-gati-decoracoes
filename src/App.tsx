@@ -152,7 +152,7 @@ const Navbar = ({ config }: { config: SiteConfig['navbar'] }) => {
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <span className="font-serif text-xl tracking-widest text-brand-dark leading-none">{config.logo}</span>
-            <span className="text-[8px] uppercase tracking-[0.3em] text-brand-muted mt-1">{config.subtitle}</span>
+            <span className="text-[8px] tracking-[0.3em] text-brand-muted mt-1">{config.subtitle}</span>
           </div>
         </div>
 
@@ -918,9 +918,9 @@ const Footer = ({ config }: { config: SiteConfig }) => (
         <div className="flex flex-col gap-8 md:gap-10">
           <div className="flex flex-col">
             <span className="font-serif text-lg md:text-xl tracking-widest text-brand-dark leading-none">{config.navbar.logo}</span>
-            <span className="text-[8px] uppercase tracking-[0.3em] text-brand-muted mt-1">{config.navbar.subtitle}</span>
+            <span className="text-[8px] tracking-[0.3em] text-brand-muted mt-1">{config.navbar.subtitle}</span>
           </div>
-          <p className="text-[10px] text-brand-muted leading-relaxed font-medium uppercase tracking-[0.2em]">
+          <p className="text-[10px] text-brand-muted leading-relaxed font-medium tracking-[0.2em]">
             {config.footer.about}
           </p>
         </div>
@@ -997,8 +997,8 @@ const LandingPage = () => {
     const unsubConfig = onSnapshot(doc(db, 'config', 'site'), (docSnap) => {
       const initialConfig: SiteConfig = {
         navbar: {
-          logo: 'CRISTINA GATTI',
-          subtitle: 'CERIMONIAL & DESIGN',
+          logo: 'Cristina Gatti',
+          subtitle: 'Cerimoniais & Decorações',
           links: [
             { name: 'Início', href: '#' },
             { name: 'Sobre', href: '#sobre' },
@@ -1032,7 +1032,7 @@ const LandingPage = () => {
           subtitle: 'DA DECORAÇÃO AO CERIMONIAL'
         },
         footer: {
-          about: 'Curadoria de eventos e momentos inesquecíveis há mais de 10 anos.',
+          about: 'Nossa missão é conduzir cada casamento com leveza, organização e sensibilidade, para que os noivos possam viver esse momento com tranquilidade e emoção.',
           whatsapp: '15 99847-9593',
           email: 'contato@cristinagatti.com.br',
           address: 'Rodovia José de Carvalho, km 127,5 — Bairro da Paineira',
